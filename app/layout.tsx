@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI SITEFLOW // Agency Showcase Hub",
+  title: "AI DIRECTOR // POWERED BY SANITY (ix5izt37)",
   description: "Official production showcase for 4K AI cinema commercials and Next.js 16 web templates by AI SiteFlow Agency.",
 };
 

@@ -31,7 +31,7 @@ export default function CommercialCard({ showcase }: CommercialCardProps) {
           </span>
         </div>
 
-        {/* Center Play Button Overlay */}
+        {/* Center Play Button Overlay & Whole Cover Click to detailUrl */}
         <a
           href={showcase.detailUrl}
           target="_blank"
@@ -88,8 +88,7 @@ export default function CommercialCard({ showcase }: CommercialCardProps) {
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface hover:bg-white/10 text-zinc-300 hover:text-porcelain text-xs font-mono font-medium border border-white/10 hover:border-white/20 transition-all active:scale-[0.98]"
           >
-            <span>VIEW PRODUCTION DETAILS</span>
-            <ExternalLink className="w-3.5 h-3.5 text-cyan" />
+            <span>VIEW PRODUCTION DETAILS ↗</span>
           </a>
         </div>
       </div>

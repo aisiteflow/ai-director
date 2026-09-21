@@ -10,7 +10,7 @@ interface TemplateCardProps {
 export default function TemplateCard({ template }: TemplateCardProps) {
   return (
     <div className="glass-panel hover:glass-panel-glow rounded-2xl overflow-hidden border border-white/10 hover:border-cobalt/40 transition-all duration-300 flex flex-col group shadow-xl">
-      {/* Aspect Ratio Preview with Rounded Borders */}
+      {/* Aspect Ratio Preview with Rounded Borders and Clickable Cover */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-obsidian">
         <Image
           src={template.coverSrc}
@@ -38,6 +38,15 @@ export default function TemplateCard({ template }: TemplateCardProps) {
             Next.js 16
           </span>
         </div>
+
+        {/* Clickable Overlay to detailUrl */}
+        <a
+          href={template.detailUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute inset-0 z-10 cursor-pointer"
+          aria-label={`View details for ${template.title}`}
+        />
       </div>
 
       {/* Card Body */}
@@ -54,7 +63,7 @@ export default function TemplateCard({ template }: TemplateCardProps) {
 
         {/* Action Buttons Section */}
         <div className="space-y-2 pt-2 border-t border-white/5">
-          {/* Action Row 1 (Split 50/50) */}
+          {/* Action Row 1 (Split Row: Launch Template ↗ and Customize ⚡) */}
           <div className="grid grid-cols-2 gap-2">
             {/* Launch Template */}
             <a
@@ -63,8 +72,7 @@ export default function TemplateCard({ template }: TemplateCardProps) {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-cobalt/20 hover:bg-cobalt border border-cobalt/40 hover:border-cobalt text-porcelain text-xs font-mono font-semibold transition-all shadow-sm active:scale-[0.98] truncate"
             >
-              <span className="truncate">Launch Template</span>
-              <ExternalLink className="w-3 h-3 text-cyan shrink-0" />
+              <span className="truncate">Launch Template ↗</span>
             </a>
 
             {/* Customize */}
@@ -74,20 +82,18 @@ export default function TemplateCard({ template }: TemplateCardProps) {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface hover:bg-white/10 border border-white/10 hover:border-white/20 text-porcelain text-xs font-mono font-semibold transition-all shadow-sm active:scale-[0.98] truncate"
             >
-              <span className="truncate">Customize</span>
-              <Zap className="w-3 h-3 text-yellow-400 shrink-0" />
+              <span className="truncate">Customize ⚡</span>
             </a>
           </div>
 
-          {/* Action Row 2 (Full-width) */}
+          {/* Action Row 2 (Full Width Button: VIEW DETAILS →) */}
           <a
             href={template.detailUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-obsidian/70 hover:bg-surface border border-white/10 hover:border-cobalt/40 text-zinc-300 hover:text-porcelain text-xs font-mono font-bold tracking-wider uppercase transition-all active:scale-[0.98]"
           >
-            <span>VIEW DETAILS</span>
-            <ArrowRight className="w-3.5 h-3.5 text-cyan" />
+            <span>VIEW DETAILS →</span>
           </a>
         </div>
       </div>

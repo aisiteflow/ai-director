@@ -1,4 +1,11 @@
-import { createClient } from "next-sanity";
+import {
+  client,
+  getCommercials,
+  getTemplates,
+  projectId,
+  dataset,
+  apiVersion,
+} from "./lib/client";
 import {
   CommercialBlueprint,
   DirectingStyle,
@@ -7,23 +14,13 @@ import {
   TimelineClip,
 } from "./seedData";
 
-export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "demo-director-2026";
-export const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
-export const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2026-09-21";
-
-export const client = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: false,
-});
+export { client, getCommercials, getTemplates, projectId, dataset, apiVersion };
 
 /**
  * Fetch all commercial blueprints with transparent offline fallback to seed data.
  */
 export async function getCommercialBlueprints(): Promise<CommercialBlueprint[]> {
   try {
-    // If using the default demo ID, immediately use high-fidelity seed data
     if (projectId === "demo-director-2026" || !projectId) {
       return SEED_BLUEPRINTS;
     }
@@ -35,7 +32,7 @@ export async function getCommercialBlueprints(): Promise<CommercialBlueprint[]> 
     }
     return SEED_BLUEPRINTS;
   } catch (err) {
-    console.warn("Sanity client fetch failed or offline; using seed blueprints fallback:", err);
+    console.warn("Sanity client fetch failed; using seed blueprints fallback:", err);
     return SEED_BLUEPRINTS;
   }
 }
@@ -43,13 +40,10 @@ export async function getCommercialBlueprints(): Promise<CommercialBlueprint[]> 
 /**
  * Fetch single commercial blueprint by slug with fallback.
  */
-export async function getCommercialBlueprintBySlug(
-  slug: string
-): Promise<CommercialBlueprint | null> {
+export async function getCommercialBlueprintBySlug(slug: string): Promise<CommercialBlueprint | null> {
   try {
     if (projectId === "demo-director-2026" || !projectId) {
-      const found = SEED_BLUEPRINTS.find((b) => b.slug.current === slug);
-      return found || SEED_BLUEPRINTS[0];
+      return SEED_BLUEPRINTS.find((b) => b.slug.current === slug) || SEED_BLUEPRINTS[0];
     }
     const data = await client.fetch<CommercialBlueprint>(
       `*[_type == "commercialBlueprint" && slug.current == $slug][0]`,
@@ -98,7 +92,6 @@ export function generateCompiledTimeline(input: CompilerInput): CommercialBluepr
   const { brandName, industry, duration, mood } = input;
   const safeBrand = brandName.trim() || "Obsidian Prime";
 
-  // Clip counts based on duration
   const clipCountMap: Record<string, number> = {
     "15s": 2,
     "30s": 3,
@@ -129,7 +122,6 @@ export function generateCompiledTimeline(input: CompilerInput): CommercialBluepr
     palette = "Phosphor Cyan (#06B6D4), Carbon Obsidian, Electric Cobalt";
   }
 
-  // Pre-configured archetype clips adapted to the user's input
   const clips: TimelineClip[] = [];
 
   const timeStampsByDuration: Record<string, string[]> = {
@@ -225,3 +217,5 @@ export function generateCompiledTimeline(input: CompilerInput): CommercialBluepr
     timelineClips: clips,
   };
 }
+
+export default client;

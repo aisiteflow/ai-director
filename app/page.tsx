@@ -1,6 +1,9 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/Footer";
+import CommercialCard from "@/components/CommercialCard";
+import TemplateCard from "@/components/TemplateCard";
+import { getCommercials, getTemplates } from "@/sanity/lib/client";
 import {
   Film,
   LayoutGrid,
@@ -10,153 +13,218 @@ import {
   ShieldCheck,
   Zap,
   CheckCircle2,
+  Database,
 } from "lucide-react";
-import ShowcaseNavbar from "@/components/ShowcaseNavbar";
-import ShowcaseFooter from "@/components/ShowcaseFooter";
-import CommercialCard from "@/components/CommercialCard";
-import TemplateCard from "@/components/TemplateCard";
-import { COMMERCIAL_SHOWCASES, TEMPLATE_SHOWCASES } from "@/data/showcase-data";
+import Link from "next/link";
 
-export default function ShowcaseHubPage() {
-  const [activeTab, setActiveTab] = useState<"commercials" | "templates">("commercials");
+export const revalidate = 60;
+
+export default async function HomePage() {
+  const allCommercials = await getCommercials();
+  const allTemplates = await getTemplates();
+
+  // Featured Top Commercials: CleanTech & AI Governance
+  const featuredCommercials = allCommercials.filter(
+    (c) => c.id === "cleantech" || c.id === "ai-governance"
+  );
+  // Fallback if IDs differ
+  const topCommercials =
+    featuredCommercials.length >= 2 ? featuredCommercials : allCommercials.slice(0, 2);
+
+  // Featured Top Templates: KORTEX & ESTATES
+  const featuredTemplates = allTemplates.filter(
+    (t) => t.id === "kortex" || t.id === "estates"
+  );
+  const topTemplates =
+    featuredTemplates.length >= 2 ? featuredTemplates : allTemplates.slice(0, 2);
 
   return (
     <div className="min-h-screen flex flex-col bg-obsidian text-porcelain selection:bg-cobalt selection:text-white">
-      {/* Navigation Header */}
-      <ShowcaseNavbar activeTab={activeTab} onTabChange={setActiveTab} />
+      <Navbar />
 
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-20 cinema-film-grid">
-        {/* Hero Section */}
-        <section className="text-center max-w-3xl mx-auto mb-16 space-y-5">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-14 pb-20 cinema-film-grid">
+        {/* High-Impact Hero Section */}
+        <section className="text-center max-w-3xl mx-auto mb-16 space-y-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cobalt/15 border border-cobalt/35 text-cyan text-xs font-mono">
             <span className="w-2 h-2 rounded-full bg-cyan animate-pulse" />
-            <span>OFFICIAL CLIENT PRODUCTION HUB</span>
+            <span>AI DIRECTOR // SANITY PRODUCTION HUB (ix5izt37)</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight font-sans text-porcelain leading-[1.15]">
-            Cinematic AI Commercials &{" "}
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight font-sans text-porcelain leading-[1.12]">
+            Cinema AI Commercials &{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan via-blue-400 to-cobalt">
-              Next.js 16 Platforms
+              Next.js 16 Web Apps
             </span>
           </h1>
 
           <p className="text-sm sm:text-base text-zinc-400 font-sans leading-relaxed max-w-2xl mx-auto">
-            High-speed production portfolio engineered by{" "}
-            <a
-              href="https://aisiteflow.agency"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-cyan underline decoration-cobalt underline-offset-4 hover:text-porcelain transition-colors font-medium"
-            >
-              AI SiteFlow Agency
-            </a>
-            . Zero heavy video bottlenecks, zero mock APIs — pure client-grade commercial execution.
+            Architected for global brands and venture-backed startups. Powered by real Sanity Headless CMS,
+            cinema-grade generative AI video models, and ultra-fast Next.js 16 architecture.
           </p>
 
-          {/* Quick Metrics Bar */}
-          <div className="pt-4 flex flex-wrap items-center justify-center gap-3 text-xs font-mono">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-white/10 text-zinc-300">
-              <Film className="w-3.5 h-3.5 text-cobalt" />
-              <span>5x 4K Master Commercials</span>
+          {/* Live Stats Counter: 5 Production Commercials, 5 Next.js 16 Web Apps, Zero-Wait Cloud Delivery */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 max-w-2xl mx-auto">
+            <div className="glass-panel p-4 rounded-2xl border border-white/10 text-center space-y-1">
+              <span className="text-2xl sm:text-3xl font-extrabold font-mono text-cyan block">
+                5
+              </span>
+              <p className="text-xs font-mono text-zinc-400">5 Production Commercials</p>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-white/10 text-zinc-300">
-              <Zap className="w-3.5 h-3.5 text-yellow-400" />
-              <span>5x Next.js 16 Templates</span>
+
+            <div className="glass-panel p-4 rounded-2xl border border-white/10 text-center space-y-1">
+              <span className="text-2xl sm:text-3xl font-extrabold font-mono text-porcelain block">
+                5
+              </span>
+              <p className="text-xs font-mono text-zinc-400">5 Next.js 16 Web Apps</p>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-white/10 text-zinc-300">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Direct Agency Dispatch</span>
+
+            <div className="glass-panel p-4 rounded-2xl border border-white/10 text-center space-y-1">
+              <span className="text-2xl sm:text-3xl font-extrabold font-mono text-emerald-400 block">
+                0ms
+              </span>
+              <p className="text-xs font-mono text-zinc-400">Zero-Wait Cloud Delivery</p>
             </div>
+          </div>
+
+          {/* Hero Quick Navigation Buttons */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/commercials"
+              className="px-5 py-3 rounded-xl bg-cobalt hover:bg-blue-600 text-porcelain font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-cobalt/30 flex items-center gap-2 active:scale-[0.98]"
+            >
+              <Film className="w-4 h-4 text-cyan" />
+              <span>EXPLORE 4K COMMERCIALS</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+
+            <Link
+              href="/templates"
+              className="px-5 py-3 rounded-xl bg-surface hover:bg-white/10 border border-white/10 hover:border-white/20 text-porcelain font-mono font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 active:scale-[0.98]"
+            >
+              <LayoutGrid className="w-4 h-4 text-cyan" />
+              <span>EXPLORE SAAS TEMPLATES</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </section>
 
-        {/* SECTION 1: 4K COMMERCIAL SHOWCASES GRID */}
-        <section id="commercials" className="mb-24 scroll-mt-28">
-          {/* Section Header */}
+        {/* FEATURED COMMERCIALS ROW (CleanTech & AI Governance) */}
+        <section className="mb-20">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 border-b border-white/10 pb-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-cyan font-semibold">
                 <Film className="w-4 h-4" />
-                <span>Section 01 // 4K Commercial Sequences</span>
+                <span>Featured Spotlights // 4K Commercials</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold font-sans text-porcelain">
-                Commercial Showcases ({COMMERCIAL_SHOWCASES.length})
+                Flagship Commercial Productions
               </h2>
             </div>
 
-            <p className="text-xs font-mono text-zinc-400 max-w-sm text-left sm:text-right">
-              Broadcast-ready 4K AI video campaigns with calibrated foley audio & optics.
-            </p>
+            <Link
+              href="/commercials"
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-cyan hover:underline group"
+            >
+              <span>View Full Catalog (5 Commercials)</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
 
-          {/* 2-Column Masonry Grid Matching Agency Design 1:1 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {COMMERCIAL_SHOWCASES.map((showcase) => (
+            {topCommercials.map((showcase) => (
               <CommercialCard key={showcase.id} showcase={showcase} />
             ))}
           </div>
+
+          <div className="text-center mt-8">
+            <Link
+              href="/commercials"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl glass-panel hover:glass-panel-glow border border-white/10 hover:border-cobalt/50 text-xs font-mono text-porcelain transition-all"
+            >
+              <span>VIEW COMPLETE 4K COMMERCIAL CATALOG (5 PRODUCTIONS)</span>
+              <ArrowRight className="w-4 h-4 text-cyan" />
+            </Link>
+          </div>
         </section>
 
-        {/* SECTION 2: NEXT.JS 16 TEMPLATES GRID */}
-        <section id="templates" className="scroll-mt-28">
-          {/* Section Header */}
+        {/* FEATURED TEMPLATES ROW (KORTEX & ESTATES) */}
+        <section className="mb-20">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 border-b border-white/10 pb-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-cyan font-semibold">
                 <LayoutGrid className="w-4 h-4" />
-                <span>Section 02 // Enterprise Web Blueprints</span>
+                <span>Featured Spotlights // Next.js 16 Web Apps</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold font-sans text-porcelain">
-                Next.js 16 Templates ({TEMPLATE_SHOWCASES.length})
+                Flagship SaaS Platforms
               </h2>
             </div>
 
-            <p className="text-xs font-mono text-zinc-400 max-w-sm text-left sm:text-right">
-              Sub-second production web templates with responsive UI & custom styling.
-            </p>
+            <Link
+              href="/templates"
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-cyan hover:underline group"
+            >
+              <span>View Full Catalog (5 Templates)</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
 
-          {/* Responsive 3-Column / 2-Column Grid Matching Agency Templates Showcase 1:1 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {TEMPLATE_SHOWCASES.map((template) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {topTemplates.map((template) => (
               <TemplateCard key={template.id} template={template} />
             ))}
           </div>
+
+          <div className="text-center mt-8">
+            <Link
+              href="/templates"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl glass-panel hover:glass-panel-glow border border-white/10 hover:border-cobalt/50 text-xs font-mono text-porcelain transition-all"
+            >
+              <span>VIEW COMPLETE TEMPLATES CATALOG (5 PLATFORMS)</span>
+              <ArrowRight className="w-4 h-4 text-cyan" />
+            </Link>
+          </div>
         </section>
 
-        {/* Agency Direct Banner CTA */}
-        <section className="mt-20 glass-panel-glow rounded-3xl p-8 sm:p-12 border border-cobalt/40 text-center space-y-6 relative overflow-hidden">
-          <div className="absolute -top-24 -left-24 w-72 h-72 bg-cobalt/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-cyan/15 rounded-full blur-3xl pointer-events-none" />
-
+        {/* Sanity Studio Direct Management Banner */}
+        <section className="glass-panel-glow rounded-3xl p-8 sm:p-12 border border-cobalt/40 text-center space-y-6 relative overflow-hidden">
           <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-            <span className="text-xs uppercase font-mono px-3 py-1 rounded-full bg-surface border border-white/10 text-cyan">
-              Full Bespoke Agency Services
-            </span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-white/10 text-cyan text-xs font-mono">
+              <Database className="w-3.5 h-3.5" />
+              <span>Project ID: ix5izt37 (production dataset)</span>
+            </div>
+
             <h3 className="text-2xl sm:text-4xl font-extrabold text-porcelain font-sans">
-              Need a Custom Commercial or Web Experience?
+              Integrated Sanity Studio CMS
             </h3>
+
             <p className="text-sm text-zinc-300 leading-relaxed font-sans">
-              We deploy custom AI commercial pipelines, bespoke 3D interactive web experiences, and high-performance Next.js 16 architectures for global brands.
+              Manage commercials, customize templates, and update metadata directly inside the embedded Sanity Studio.
             </p>
 
             <div className="pt-2 flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href="/studio"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cobalt hover:bg-blue-600 text-porcelain font-mono font-bold text-xs uppercase tracking-wider shadow-lg shadow-cobalt/35 transition-all"
+              >
+                <Database className="w-4 h-4" />
+                <span>LAUNCH EMBEDDED SANITY STUDIO</span>
+              </Link>
               <a
                 href="https://aisiteflow.agency"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cobalt via-blue-600 to-cyan text-porcelain font-mono font-bold text-xs uppercase tracking-wider shadow-lg shadow-cobalt/35 hover:scale-105 active:scale-95 transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-surface hover:bg-white/10 border border-white/10 text-porcelain font-mono font-bold text-xs uppercase tracking-wider transition-all"
               >
-                <span>COMMISSION YOUR PROJECT AT AISITEFLOW.AGENCY</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>OFFICIAL AGENCY SITE</span>
+                <ExternalLink className="w-4 h-4 text-cyan" />
               </a>
             </div>
           </div>
         </section>
       </main>
 
-      {/* Agency Footer */}
-      <ShowcaseFooter />
+      <Footer />
     </div>
   );
 }
